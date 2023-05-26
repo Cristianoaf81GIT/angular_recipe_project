@@ -1,0 +1,56 @@
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { catchError } from "rxjs/operators";
+import { Observable, throwError, OperatorFunction, ObservedValueOf } from 'rxjs';
+import { environment } from "../../environments/environment.development"
+
+
+interface AuthResponseData {
+  idToken: string;
+  email: string;
+  refreshToken: string;
+  expiresIn: string;
+  localId: string;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+
+  constructor(private http: HttpClient) {}
+
+  signup(email: string, password: string) {
+    return this.http.post<AuthResponseData>(environment.signUpUrl, {
+      email,
+      password,
+      returnSecureToken: true
+    }).pipe(
+        catchError(
+          (err: any, _caught: Observable<any>): OperatorFunction<any, any | ObservedValueOf<any>> | Observable<never> => {
+        let errorMessage = 'An unknown error occurred!';
+
+        if (!err.error || !err.error.error) {
+          return throwError(errorMessage);
+        }
+
+        switch(err.error.error.message) {
+          case 'EMAIL_EXISTS':
+            errorMessage = 'Email already exists!';
+            break;
+          case 'OPERATION_NOT_ALLOWED':
+            errorMessage = 'Password sign-in is disabled for this project!';
+            break;
+          case 'TOO_MANY_ATTEMPTS_TRY_LATER':
+            errorMessage = 'We have blocked all requests from this device due to unusual activity. Try again later!';
+            break;
+          default:
+            break;
+        }
+
+        return throwError(errorMessage);
+      }))
+  }
+
+
+}
