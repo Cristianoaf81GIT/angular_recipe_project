@@ -5,12 +5,13 @@ import { Observable, throwError, OperatorFunction, ObservedValueOf } from 'rxjs'
 import { environment } from "../../environments/environment.development"
 
 
-interface AuthResponseData {
+export interface AuthResponseData {
   idToken: string;
   email: string;
   refreshToken: string;
   expiresIn: string;
   localId: string;
+  registered?: boolean;
 }
 
 @Injectable({
@@ -52,5 +53,38 @@ export class AuthService {
       }))
   }
 
+  login(email: string, password: string) {
+    return this.http.post<AuthResponseData>(environment.signInUrl,{
+      email,
+      password,
+      returnSecureToken: true
+    }).pipe(
+        catchError(
+          (err: any, _caught: Observable<any>): OperatorFunction<any, any | ObservedValueOf<any>> | Observable<never> => {
+            let errorMessage = 'An unknown error occurred!';
 
+            if (!err.error || !err.error.error) {
+              return throwError(errorMessage);
+            }
+
+            switch(err.error.error.message) {
+              case 'EMAIL_NOT_FOUND':
+                errorMessage = 'Email not found!';
+                break;
+              case 'INVALID_PASSWORD':
+                errorMessage = 'Invalid Password!';
+                break;
+              case 'USER_DISABLED':
+                errorMessage = 'The user account has been disabled by an administrator!';
+                break;
+              default:
+                break;
+            }
+
+            return throwError(errorMessage);
+
+          }
+        )
+      );
+  }
 }
