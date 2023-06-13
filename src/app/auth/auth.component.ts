@@ -32,7 +32,7 @@ export class AuthComponent{
     if (this.isLoginMode) {
       authObs = this.authService.login(email, password); /*.subscribe({
         next: (data) => {
-          console.log(`data:  ${JSON.stringify(data)}`);
+            console.log(`data:  ${JSON.stringify(data)}`);
           this.isLoading = false;
           this.errorRequest = null;
         },
