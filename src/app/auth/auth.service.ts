@@ -1,8 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { catchError } from "rxjs/operators";
-import { Observable, throwError, OperatorFunction, ObservedValueOf } from 'rxjs';
+import { catchError, tap } from "rxjs/operators";
+import { Observable, throwError, OperatorFunction, ObservedValueOf, Subject } from 'rxjs';
 import { environment } from "../../environments/environment.development"
+import { User } from "./user.model";
 
 
 export interface AuthResponseData {
@@ -19,6 +20,8 @@ export interface AuthResponseData {
 })
 export class AuthService {
 
+  user: Subject<User> = new Subject();
+
   constructor(private http: HttpClient) {}
 
   signup(email: string, password: string) {
@@ -27,8 +30,31 @@ export class AuthService {
       password,
       returnSecureToken: true
     }).pipe(
-        catchError(this.errorHandler)
+        catchError(this.errorHandler),
+        tap((res) => {
+          this.handleAuthentication(
+            res.email,
+            res.localId,
+            res.idToken,
+            +res.expiresIn
+          );
+        })
       );
+  }
+
+  private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
+    const expDate = new Date(
+      new Date().getTime() +
+      expiresIn *
+      1000
+    );
+    const usr = new User(
+      email,
+      userId,
+      token,
+      expDate
+    );
+    this.user.next(usr);
   }
 
   login(email: string, password: string) {
