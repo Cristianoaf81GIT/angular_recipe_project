@@ -63,7 +63,15 @@ export class AuthService {
       password,
       returnSecureToken: true
     }).pipe(
-        catchError(this.errorHandler)
+        catchError(this.errorHandler),
+         tap((res) => {
+          this.handleAuthentication(
+            res.email,
+            res.localId,
+            res.idToken,
+            +res.expiresIn
+          );
+        })
       );
   }
 
