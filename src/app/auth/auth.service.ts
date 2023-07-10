@@ -1,7 +1,14 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { catchError, tap } from "rxjs/operators";
-import { Observable, throwError, OperatorFunction, ObservedValueOf, Subject } from 'rxjs';
+import {
+  Observable,
+  throwError,
+  OperatorFunction,
+  ObservedValueOf,
+  // Subject,
+  BehaviorSubject
+} from 'rxjs';
 import { environment } from "../../environments/environment.development"
 import { User } from "./user.model";
 
@@ -20,7 +27,7 @@ export interface AuthResponseData {
 })
 export class AuthService {
 
-  user: Subject<User> = new Subject();
+  user: BehaviorSubject<User> = new BehaviorSubject(null);
 
   constructor(private http: HttpClient) {}
 
