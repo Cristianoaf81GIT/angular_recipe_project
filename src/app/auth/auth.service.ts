@@ -11,6 +11,7 @@ import {
 } from 'rxjs';
 import { environment } from "../../environments/environment.development"
 import { User } from "./user.model";
+import { Router } from "@angular/router";
 
 
 export interface AuthResponseData {
@@ -29,7 +30,7 @@ export class AuthService {
 
   user: BehaviorSubject<User> = new BehaviorSubject(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   signup(email: string, password: string) {
     return this.http.post<AuthResponseData>(environment.signUpUrl, {
@@ -80,6 +81,11 @@ export class AuthService {
           );
         })
       );
+  }
+
+  logout() {
+    this.user.next(null);
+    this.router.navigate(['/auth']);
   }
 
   private errorHandler(err: any, _caught: Observable<any>): OperatorFunction<any, any | ObservedValueOf<any>> | Observable<never> {
