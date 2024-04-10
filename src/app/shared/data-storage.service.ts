@@ -5,20 +5,26 @@ import { map, tap, take, exhaustMap } from 'rxjs/operators';
 import { Recipe } from '../recipes/recipe.model';
 import { RecipeService } from '../recipes/recipe.service';
 import { AuthService } from '../auth/auth.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class DataStorageService {
+
+  private baseUrl: string;
+
   constructor(
     private http: HttpClient,
     private recipeService: RecipeService,
     private authService: AuthService
-  ) {}
+  ) {
+    this.baseUrl = environment.baseUrl;
+  }
 
   storeRecipes() {
     const recipes = this.recipeService.getRecipes();
     this.http
       .put(
-        'https://angular-test-fd57f-default-rtdb.firebaseio.com/recipes.json',
+        this.baseUrl,
         recipes
       )
       .subscribe(response => {
@@ -29,7 +35,7 @@ export class DataStorageService {
   fetchRecipes() {
     return this.http
       .get<Recipe[]>(
-        'https://angular-test-fd57f-default-rtdb.firebaseio.com/recipes.json'
+       this.baseUrl
       )
       .pipe(
         map(recipes => {
