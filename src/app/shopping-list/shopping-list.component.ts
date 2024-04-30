@@ -5,13 +5,13 @@ import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from './shopping-list.service';
 import { LoggingService } from '../logging.service';
 import { Store } from '@ngrx/store';
-import { ShoppingListStateType } from './store/shopping-list.reducer';
 import { shoppingListSelector } from './store/shopping-list.selector';
+import * as fromShoppingList from './store/shopping-list.reducer';
 
 @Component({
   selector: 'app-shopping-list',
   templateUrl: './shopping-list.component.html',
-  styleUrls: ['./shopping-list.component.css']
+  styleUrls: ['./shopping-list.component.css'],
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
   ingredients: Ingredient[];
@@ -21,19 +21,11 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   constructor(
     private slService: ShoppingListService,
     private loggingService: LoggingService,
-    private store: Store<{shoppingList: ShoppingListStateType}>,
+    private store: Store<fromShoppingList.AppState>,
   ) {}
 
   ngOnInit() {
     this.obsIngredients = this.store.select(shoppingListSelector);
-
-    /*this.ingredients = this.slService.getIngredients();
-    this.subscription = this.slService.ingredientsChanged.subscribe(
-      (ingredients: Ingredient[]) => {
-        this.ingredients = ingredients;
-      }
-    );*/
-
     this.loggingService.printLog('Hello from ShoppingListComponent ngOnInit!');
   }
 

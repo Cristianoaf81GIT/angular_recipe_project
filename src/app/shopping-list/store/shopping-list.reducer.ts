@@ -9,10 +9,18 @@ import {
 
 export interface ShoppingListStateType {
   ingredients: Ingredient[];
+  editedIngredient?: Ingredient | null;
+  editedIngredientIndex?: number;
+}
+
+export interface AppState {
+  shoppingList: ShoppingListStateType;
 }
 
 const initialState: ShoppingListStateType = {
   ingredients: [new Ingredient('Apples', 5), new Ingredient('Tomatoes', 10)],
+  editedIngredient: null,
+  editedIngredientIndex: -1,
 };
 
 export const shoppingListReducer = createReducer(
@@ -50,5 +58,5 @@ export const shoppingListReducer = createReducer(
     } else {
       return state;
     }
-  })
+  }),
 );

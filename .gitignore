@@ -43,3 +43,7 @@ Thumbs.db
 
 /.env.json
 .env.json
+
+./src/environments/environment.ts
+./src/environments/environment.prod.ts
+src/environments/*.ts

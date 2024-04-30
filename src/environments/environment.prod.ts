@@ -1,4 +1,6 @@
 export const environment = {
   production: true,
-  firebaseAPIKey: 'AIzaSyDb0xTaRAoxyCgvaDF3kk5VYOsTwB_3o7Y'
+  firebaseAPIKey: 'AIzaSyDip7pAXymLAfChPfRtqMbGgDe8ioFfBtg',
+  baseUrl:
+    'https://ng-course-recipe-book-791b3-default-rtdb.firebaseio.com/recipes.json',
 };
