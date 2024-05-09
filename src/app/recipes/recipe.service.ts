@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { Subject } from "rxjs";
 
-import { Recipe } from './recipe.model';
-import { Ingredient } from '../shared/ingredient.model';
-import { Store } from '@ngrx/store';
-import { addIngredients } from '../shopping-list/store/shopping-list.action';
-import * as fromShoppingList from '../shopping-list/store/shopping-list.reducer';
+import { Recipe } from "./recipe.model";
+import { Ingredient } from "../shared/ingredient.model";
+import { Store } from "@ngrx/store";
+import { addIngredients } from "../shopping-list/store/shopping-list.action";
+import * as fromShoppingList from "../shopping-list/store/shopping-list.reducer";
 
 @Injectable()
 export class RecipeService {
